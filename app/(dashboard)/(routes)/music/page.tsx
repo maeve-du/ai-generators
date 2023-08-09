@@ -17,8 +17,10 @@ import Empty from '@/components/Empty'
 import Loader from '@/components/Loader'
 
 import { formSchema } from './constans'
+import { useProModal } from '@/hooks/useProModal'
 
 const MusicPage = () => {
+  const proModal = useProModal()
   const router = useRouter()
 
   const [music, setMusic] = useState<string>()
@@ -40,8 +42,9 @@ const MusicPage = () => {
 
       form.reset()
     } catch (error) {
-      // TODO open pro modal
-      console.log(error)
+      if (error?.response?.states === 403) {
+        proModal.onOpen()
+      }
     } finally {
       router.refresh()
     }
@@ -51,7 +54,7 @@ const MusicPage = () => {
     <div>
       <Heading
         title="Music Generation"
-        description="Turn your prompt into music"
+        description="Turn your prompt into music."
         icon={Music}
         iconColor="text-emerald-500"
         bgColor="bg-emerald-500/10"

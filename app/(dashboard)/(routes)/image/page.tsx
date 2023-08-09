@@ -22,8 +22,10 @@ import { useState } from 'react'
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardFooter } from '@/components/ui/card'
 import Image from 'next/image'
+import { useProModal } from '@/hooks/useProModal'
 
 const ImagePage = () => {
+  const proModal = useProModal()
   const router = useRouter()
   const [images, setImages] = useState<string[]>([])
 
@@ -50,8 +52,9 @@ const ImagePage = () => {
 
       form.reset()
     } catch (error) {
-      // TODO open pro modal
-      console.log(error)
+      if (error?.response?.states === 403) {
+        proModal.onOpen()
+      }
     } finally {
       router.refresh()
     }

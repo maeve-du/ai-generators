@@ -21,6 +21,7 @@ import BotAvatar from '@/components/BotAvatar'
 
 import { formSchema } from './constans'
 import { cn } from '@/lib/utils'
+import { useProModal } from '@/hooks/useProModal'
 
 const CoversationPage = () => {
   const router = useRouter()
@@ -37,7 +38,7 @@ const CoversationPage = () => {
   const isLoading = form.formState.isSubmitting
 
   const onSubmit = async (value: z.infer<typeof formSchema>) => {
-    console.log(value)
+    const proModal = useProModal()
 
     try {
       const userMessage: ChatCompletionRequestMessage = {
@@ -52,8 +53,11 @@ const CoversationPage = () => {
       setMessages((current) => [...current, userMessage, response.data])
 
       form.reset()
-    } catch (error) {
-      // TODO open pro modal
+    } catch (error: any) {
+      if (error?.response?.states === 403) {
+        proModal.onOpen()
+      }
+
       console.log(error)
     } finally {
       router.refresh()
@@ -114,8 +118,7 @@ const CoversationPage = () => {
                 )}
               >
                 {message.role === 'user' ? <UserAvatar /> : <BotAvatar />}
-
-                <p className="text-sm"> {message.content}</p>
+                <p className="text-sm">{message.content}</p>
               </div>
             ))}
           </div>
