@@ -5,6 +5,7 @@ import { auth, currentUser } from '@clerk/nextjs'
 import { NextResponse } from 'next/server'
 
 const settingsUrl = absoluteUrl('/settings')
+const failedUrl = absoluteUrl('/failed')
 
 export async function GET() {
   try {
@@ -30,7 +31,7 @@ export async function GET() {
 
     const stripeSession = await stripe.checkout.sessions.create({
       success_url: settingsUrl,
-      cancel_url: settingsUrl,
+      cancel_url: failedUrl,
       payment_method_types: ['card'],
       mode: 'subscription',
       billing_address_collection: 'auto',
