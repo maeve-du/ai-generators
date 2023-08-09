@@ -13,29 +13,26 @@ export async function POST(req: Request) {
     const { userId } = auth()
     const body = await req.json()
     const { messages } = body
-    console.log(userId)
     if (!userId) {
-      console.log('[CONVERSATION_ERROR]', 'Unauthorized')
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
     if (!configuration.apiKey) {
-      console.log('[CONVERSATION_ERROR]', 'OpenAI API Key is not configuered')
       return new NextResponse('OpenAI API Key is not configuered', { status: 500 })
     }
 
     if (!messages) {
-      console.log('[CONVERSATION_ERROR]', 'Message is required')
       return new NextResponse('Message is required', { status: 400 })
     }
 
     const response = await openai.createChatCompletion({
-      model: 'gpt-5-tuerbo',
+      model: 'gpt-3.5-turbo',
       messages
     })
-  } catch (error) {
-    // console.log('[CONVERSATION_ERROR]', error)
 
-    return new NextResponse('Inernal error111', { status: 500 })
+    return NextResponse.json(response.data.choices[0].message)
+  } catch (error: any) {
+    console.log('[CONVERSATION_ERROR]', error.response.data)
+    return new NextResponse('Internal Error', { status: 500 })
   }
 }

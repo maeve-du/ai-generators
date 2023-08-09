@@ -39,11 +39,9 @@ const CoversationPage = () => {
       }
 
       const newMessages = [...messages, userMessage]
-      console.log('@@@', newMessages)
       const response = await axios.post('/api/conversation', {
         messages: newMessages
       })
-      console.log('@@@2', response.data)
       setMessages((current) => [...current, userMessage, response.data])
 
       form.reset()
