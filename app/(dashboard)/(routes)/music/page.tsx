@@ -5,9 +5,8 @@ import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MessageSquare } from 'lucide-react'
+import { Music } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { ChatCompletionRequestMessage } from 'openai'
 
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -16,16 +15,13 @@ import { Button } from '@/components/ui/button'
 import Heading from '@/components/Heading'
 import Empty from '@/components/Empty'
 import Loader from '@/components/Loader'
-import UserAvatar from '@/components/UserAvatar'
-import BotAvatar from '@/components/BotAvatar'
 
 import { formSchema } from './constans'
-import { cn } from '@/lib/utils'
 
-const CoversationPage = () => {
+const MusicPage = () => {
   const router = useRouter()
 
-  const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([])
+  const [music, setMusic] = useState<string>()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,19 +33,11 @@ const CoversationPage = () => {
   const isLoading = form.formState.isSubmitting
 
   const onSubmit = async (value: z.infer<typeof formSchema>) => {
-    console.log(value)
-
     try {
-      const userMessage: ChatCompletionRequestMessage = {
-        role: 'user',
-        content: value.prompt
-      }
-
-      const newMessages = [...messages, userMessage]
-      const response = await axios.post('/api/conversation', {
-        messages: newMessages
-      })
-      setMessages((current) => [...current, userMessage, response.data])
+      setMusic(undefined)
+      const response = await axios.post('/api/music')
+      console.log(response.data)
+      setMusic(response.data.audio)
 
       form.reset()
     } catch (error) {
@@ -63,11 +51,11 @@ const CoversationPage = () => {
   return (
     <div>
       <Heading
-        title="Conversation"
-        description="Our most advanced conversation model."
-        icon={MessageSquare}
-        iconColor="text-violet-500"
-        bgColor="bg-violet-500/10"
+        title="Music Generation"
+        description="Turn your prompt into music"
+        icon={Music}
+        iconColor="text-emerald-500"
+        bgColor="bg-emerald-500/10"
       />
       <div className="px-4 lg:px-8">
         <div>
@@ -84,7 +72,7 @@ const CoversationPage = () => {
                       <Input
                         className="bg-gray-100 border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent placeholder:text-gray-300"
                         disabled={isLoading}
-                        placeholder="How do I calculate the radius of a circle..."
+                        placeholder="Pinao solo..."
                         {...field}
                       />
                     </FormControl>
@@ -103,26 +91,16 @@ const CoversationPage = () => {
               <Loader />
             </div>
           )}
-          {messages.length === 0 && !isLoading && <Empty label="No conversation started." />}
-          <div className="flex flex-col-reverse gap-y-4">
-            {messages.map((message) => (
-              <div
-                key={message.content}
-                className={cn(
-                  'p-8 w-full flex items-start gap-x-8 rounded-r-lg',
-                  message.role === 'user' ? 'bg-white border border-black/10' : 'bg-muted'
-                )}
-              >
-                {message.role === 'user' ? <UserAvatar /> : <BotAvatar />}
-
-                <p className="text-sm"> {message.content}</p>
-              </div>
-            ))}
-          </div>
+          {!music && !isLoading && <Empty label="No music generated." />}
+          {music && (
+            <audio controls className="w-full mt-8">
+              <source src={music} />
+            </audio>
+          )}
         </div>
       </div>
     </div>
   )
 }
 
-export default CoversationPage
+export default MusicPage

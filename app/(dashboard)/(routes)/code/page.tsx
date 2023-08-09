@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MessageSquare } from 'lucide-react'
+import { Code } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { ChatCompletionRequestMessage } from 'openai'
+import ReactMarkDown from 'react-markdown'
 
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -21,8 +22,9 @@ import BotAvatar from '@/components/BotAvatar'
 
 import { formSchema } from './constans'
 import { cn } from '@/lib/utils'
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 
-const CoversationPage = () => {
+const CodePage = () => {
   const router = useRouter()
 
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([])
@@ -37,8 +39,6 @@ const CoversationPage = () => {
   const isLoading = form.formState.isSubmitting
 
   const onSubmit = async (value: z.infer<typeof formSchema>) => {
-    console.log(value)
-
     try {
       const userMessage: ChatCompletionRequestMessage = {
         role: 'user',
@@ -46,7 +46,7 @@ const CoversationPage = () => {
       }
 
       const newMessages = [...messages, userMessage]
-      const response = await axios.post('/api/conversation', {
+      const response = await axios.post('/api/code', {
         messages: newMessages
       })
       setMessages((current) => [...current, userMessage, response.data])
@@ -63,11 +63,11 @@ const CoversationPage = () => {
   return (
     <div>
       <Heading
-        title="Conversation"
-        description="Our most advanced conversation model."
-        icon={MessageSquare}
-        iconColor="text-violet-500"
-        bgColor="bg-violet-500/10"
+        title="Code Generation"
+        description="Generate code using descriptive text."
+        icon={Code}
+        iconColor="text-green-700"
+        bgColor="bg-green-700/10"
       />
       <div className="px-4 lg:px-8">
         <div>
@@ -84,7 +84,7 @@ const CoversationPage = () => {
                       <Input
                         className="bg-gray-100 border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent placeholder:text-gray-300"
                         disabled={isLoading}
-                        placeholder="How do I calculate the radius of a circle..."
+                        placeholder="Simple toggle button React hooks..."
                         {...field}
                       />
                     </FormControl>
@@ -115,7 +115,21 @@ const CoversationPage = () => {
               >
                 {message.role === 'user' ? <UserAvatar /> : <BotAvatar />}
 
-                <p className="text-sm"> {message.content}</p>
+                <ReactMarkdown
+                  components={{
+                    pre: ({ node, ...props }) => (
+                      <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
+                        <pre {...props} />
+                      </div>
+                    ),
+                    code: ({ node, ...props }) => (
+                      <code className="bg-black/10 rounded-lg p-1" {...props} />
+                    )
+                  }}
+                  className="text-sm overflow-hidden leading-7"
+                >
+                  {message.content || ''}
+                </ReactMarkdown>
               </div>
             ))}
           </div>
@@ -125,4 +139,4 @@ const CoversationPage = () => {
   )
 }
 
-export default CoversationPage
+export default CodePage
