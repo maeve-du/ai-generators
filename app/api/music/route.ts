@@ -10,8 +10,8 @@ export async function POST(req: Request) {
   try {
     const { userId } = auth()
     const body = await req.json()
-    console.log('[MUSIC_REQUEST]', body)
     const { prompt } = body
+
     if (!userId) {
       return new NextResponse('Unauthorized', { status: 401 })
     }
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     if (!prompt) {
       return new NextResponse('Prompt is required', { status: 400 })
     }
-    console.log('[MUSIC_REQUEST]', prompt)
+
     const response = await replicate.run(
       'riffusion/riffusion:8cf61ea6c56afd61d8f5b9ffd14d7c216c0a93844ce2d82ac1c9ecc9c7f24e05',
       {
@@ -28,8 +28,6 @@ export async function POST(req: Request) {
         }
       }
     )
-    console.log('@@@@@', response)
-
     return NextResponse.json(response)
   } catch (error: any) {
     console.log('[MUSIC_ERROR]', error)
