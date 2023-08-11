@@ -22,9 +22,11 @@ import BotAvatar from '@/components/BotAvatar'
 import { formSchema } from './constans'
 import { cn } from '@/lib/utils'
 import { useProModal } from '@/hooks/useProModal'
+import { toast } from 'react-hot-toast'
 
 const CoversationPage = () => {
   const router = useRouter()
+  const proModal = useProModal()
 
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([])
 
@@ -38,8 +40,6 @@ const CoversationPage = () => {
   const isLoading = form.formState.isSubmitting
 
   const onSubmit = async (value: z.infer<typeof formSchema>) => {
-    const proModal = useProModal()
-
     try {
       const userMessage: ChatCompletionRequestMessage = {
         role: 'user',
@@ -54,10 +54,11 @@ const CoversationPage = () => {
 
       form.reset()
     } catch (error: any) {
-      if (error?.response?.states === 403) {
+      if (error?.response?.status === 403) {
         proModal.onOpen()
+      } else {
+        toast.error(error?.message || 'Something went wrong.')
       }
-
       console.log(error)
     } finally {
       router.refresh()

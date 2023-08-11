@@ -1,7 +1,11 @@
 import React from 'react'
 
 const FailedPage = () => {
-  return <div>FailedPage</div>
+  return (
+    <p>
+      <div>111111</div>
+    </p>
+  )
 }
 
 export default FailedPage

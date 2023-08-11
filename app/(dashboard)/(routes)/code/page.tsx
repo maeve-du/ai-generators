@@ -23,6 +23,7 @@ import BotAvatar from '@/components/BotAvatar'
 import { formSchema } from './constans'
 import { cn } from '@/lib/utils'
 import { useProModal } from '@/hooks/useProModal'
+import { toast } from 'react-hot-toast'
 
 const CodePage = () => {
   const proModal = useProModal()
@@ -54,8 +55,10 @@ const CodePage = () => {
 
       form.reset()
     } catch (error: any) {
-      if (error?.response?.states === 403) {
+      if (error?.response?.status === 403) {
         proModal.onOpen()
+      }else {
+        toast.error(error?.message || 'Something went wrong.')
       }
     } finally {
       router.refresh()

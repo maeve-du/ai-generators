@@ -41,8 +41,8 @@ const MusicPage = () => {
       setMusic(response.data.audio)
 
       form.reset()
-    } catch (error) {
-      if (error?.response?.states === 403) {
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
         proModal.onOpen()
       }
     } finally {

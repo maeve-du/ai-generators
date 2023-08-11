@@ -1,22 +1,28 @@
+import LandingContent from '@/components/LandingContent'
+import LandingHero from '@/components/LandingHero'
+import LandingNavbar from '@/components/LandingNavbar'
+import Loader from '@/components/Loader'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import React from 'react'
 
 const LandingPage = () => {
   return (
-    <div className='ml-20 mt-20'>
-      Landing Page (unprotected)
-      <div className='flex gap-8 mt-10'>
+    <div className="h-full">
+      {/* Landing Page (unprotected)
+      <div className="flex gap-8 mt-10">
         <Button asChild>
-          <Link href='/sign-in'>Login</Link>
+          <Link href="/sign-in">Login</Link>
         </Button>
         <Button asChild>
-          <Link href='/sign-up'>Register</Link>
+          <Link href="/sign-up">Register</Link>
         </Button>
         <Button asChild>
-          <Link href='/dashboard'>Dashboard</Link>
+          <Link href="/dashboard">Dashboard</Link>
         </Button>
-      </div>
+      </div> */}
+      <LandingNavbar />
+      <LandingHero />
+      <LandingContent />
     </div>
   )
 }

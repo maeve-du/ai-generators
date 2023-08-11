@@ -7,14 +7,19 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 import Sidebar from '@/components/Sidebar'
 
-const MobileSidebar = ({ apiLimitCount = 0 }: { apiLimitCount: number }) => {
-  // const [isMounted, setIsMounted] = useState(false)
+interface Props {
+  apiLimitCount: number
+  isPro: boolean
+}
 
-  // useEffect(() => {
-  //   setIsMounted(true)
-  // }, [])
+const MobileSidebar = ({ apiLimitCount = 0, isPro = false }: Props) => {
+  const [isMounted, setIsMounted] = useState(false)
 
-  // if (!isMounted) return null
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) return null
 
   return (
     <Sheet>
@@ -25,7 +30,7 @@ const MobileSidebar = ({ apiLimitCount = 0 }: { apiLimitCount: number }) => {
         <Menu />
       </SheetTrigger>
       <SheetContent side="left" className="p-0">
-        <Sidebar apiLimitCount={apiLimitCount} />
+        <Sidebar isPro={isPro} apiLimitCount={apiLimitCount} />
       </SheetContent>
     </Sheet>
   )

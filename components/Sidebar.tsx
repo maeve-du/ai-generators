@@ -21,6 +21,7 @@ const montserrat = Montserrat({
   subsets: ['latin']
 })
 
+// Dashboard route list for the sidebar
 const dashboardRoutes = [
   {
     label: 'Dashboard',
@@ -68,7 +69,11 @@ const dashboardRoutes = [
 const routeCategoryBaseClasses =
   'text-sm group flex p-3 w-full justify-start font-medium cursor-pointer text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition'
 
-const Sidebar = ({ apiLimitCount = 0 }: { apiLimitCount: number }) => {
+interface Props {
+  apiLimitCount: number
+  isPro: boolean
+}
+const Sidebar = ({ apiLimitCount = 0, isPro }: Props) => {
   const pathName = usePathname()
 
   return (
@@ -104,7 +109,7 @@ const Sidebar = ({ apiLimitCount = 0 }: { apiLimitCount: number }) => {
           ))}
         </div>
       </div>
-      <FreeCounter apiLimitCount={apiLimitCount} />
+      <FreeCounter isPro={isPro} apiLimitCount={apiLimitCount} />
     </div>
   )
 }
