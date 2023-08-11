@@ -24,7 +24,7 @@ const LandingNavbar = () => {
         <h1 className={cn('text-2xl h-10 font-bold pt-1 text-white', font.className)}>Genius</h1>
       </Link>
       <div className="flex itemsc  gap-x-2">
-        <Link href={isSignedIn ? '/dashboard' : '/signup'}>
+        <Link href={isSignedIn ? '/dashboard' : '/sign-up'}>
           <Button variant={'outline'} className="rounded-full">
             Get Started
           </Button>
